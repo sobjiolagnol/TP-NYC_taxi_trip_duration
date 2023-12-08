@@ -15,17 +15,6 @@ DB_PATH = str(config.get("PATHS", "DB_PATH"))
 MODEL_PATH = str(config.get("PATHS", "MODEL_PATH"))
 RANDOM_STATE = int(config.get("ML", "RANDOM_STATE"))
 
-# # Doing the same with a YAML configuration file
-# import yaml
-#
-# with open("config.yml", "r") as f:
-#     config_yaml = yaml.load(f, Loader=yaml.SafeLoader)
-#     DB_PATH = str(config_yaml['paths']['db_path'])
-#     MODEL_PATH = str(config_yaml['paths']["model_path"])
-#     RANDOM_STATE = int(config_yaml["ml"]["random_state"])
-
-# SQLite requires the absolute path
-# DB_PATH = os.path.abspath(DB_PATH)
 DB_PATH = os.path.join(ROOT_DIR, os.path.normpath(DB_PATH))
 
 
@@ -46,8 +35,10 @@ def load_model(path):
     print(f"Done")
     return model
 
+
 def transform_target(y):
     return np.log1p(y).rename('log_' + y.name)
+
 
 def haversine_array(lat1, lng1, lat2, lng2):
     lat1, lng1, lat2, lng2 = map(np.radians, (lat1, lng1, lat2, lng2))
@@ -57,6 +48,8 @@ def haversine_array(lat1, lng1, lat2, lng2):
     d = np.sin(lat * 0.5) ** 2 + np.cos(lat1) * np.cos(lat2) * np.sin(lng * 0.5) ** 2
     h = 2 * AVG_EARTH_RADIUS * np.arcsin(np.sqrt(d))
     return h
+
+
 def is_high_traffic_trip(X):
   return ((X['hour'] >= 8) & (X['hour'] <= 19) & (X['weekday'] >= 0) & (X['weekday'] <= 4)) | \
          ((X['hour'] >= 13) & (X['hour'] <= 20) & (X['weekday'] == 5))
@@ -64,6 +57,7 @@ def is_high_traffic_trip(X):
 def is_high_speed_trip(X):
   return ((X['hour'] >= 2) & (X['hour'] <= 5) & (X['weekday'] >= 0) & (X['weekday'] <= 4)) | \
          ((X['hour'] >= 4) & (X['hour'] <= 7) & (X['weekday'] >= 5) & (X['weekday'] <= 6))
+
 
 def is_rare_point(X, latitude_column, longitude_column, qmin_lat, qmax_lat, qmin_lon, qmax_lon):
   lat_min = X[latitude_column].quantile(qmin_lat)
