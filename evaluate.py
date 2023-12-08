@@ -14,7 +14,7 @@ def load_test_data(path):
     y = common.transform_target(data_test['trip_duration'])
     return X, y
 
-def evaluate_model1(model, X, y):
+def evaluate_model(model, X, y):
     print(f"---------Evaluating the model 1----------")
     X = common.step1_add_features(X)
     X = common.step2_add_features(X)
@@ -32,5 +32,5 @@ def evaluate_model1(model, X, y):
 if __name__ == "__main__":
     X_test, y_test = load_test_data(common.DB_PATH)
     model = common.load_model(common.MODEL_PATH)
-    evaluate_model1(model, X_test, y_test)
+    evaluate_model(model, X_test, y_test)
 
